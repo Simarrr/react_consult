@@ -1,12 +1,21 @@
 {
   "expo": {
-    "name": "expo-tutorials-youtube",
-    "slug": "expo-tutorials-youtube",
+    "name": "consultant",
+    "slug": "expoProject",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "34.0.0",
+    "android": {
+      "package": "com.concultant.croc",
+      "versionCode": 1
+    },
+    "ios": {
+      "bundleIdentifier": "sadfsdf",
+      "supportsTablet": true
+    },
     "platforms": [
       "ios",
-      "android"
+      "android",
+      "web"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,10 +29,7 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    }
+      "./assets/"
+    ]
   }
 }

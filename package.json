@@ -4,17 +4,41 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "web": "expo start --web",
     "eject": "expo eject"
   },
   "dependencies": {
-    "expo": "^32.0.0",
-    "firebase": "5.7.3",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
-    "react-navigation": "^3.3.2"
+    "@babel/runtime": "^7.6.3",
+    "exp": "^57.2.1",
+    "expo": "^34.0.1",
+    "expo-asset": "~6.0.0",
+    "expo-barcode-scanner": "~6.0.0",
+    "expo-cli": "^3.4.1",
+    "expo-constants": "latest",
+    "expo-permissions": "~6.0.0",
+    "global": "^4.4.0",
+    "react": "16.8.3",
+    "react-base": "^0.2.0",
+    "react-dom": "^16.8.6",
+    "react-native": "^0.59.8",
+    "react-native-gesture-handler": "1.3.0",
+    "react-native-reanimated": "1.1.0",
+    "react-native-svg": "~9.5.1",
+    "react-native-swipeable": "^0.6.0",
+    "react-native-web": "^0.11.4",
+    "react-navigation": "^4.0.10",
+    "react-navigation-custom-bottom-tab-component": "^1.1.1",
+    "react-navigation-stack": "^1.5.5",
+    "react-navigation-tabs": "^2.5.5",
+    "react-redux": "^7.1.1",
+    "react-test-renderer": "^16.9.0",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0",
+    "socket.io-client": "^2.2.0",
+    "thunk": "^0.0.1"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-preset-expo": "^6.0.0"
   },
   "private": true
 }

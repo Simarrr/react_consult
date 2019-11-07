@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Everything-Expo.iml" filepath="$PROJECT_DIR$/.idea/Everything-Expo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/expoProject.iml" filepath="$PROJECT_DIR$/.idea/expoProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../server/.idea/server.iml" filepath="$PROJECT_DIR$/../server/.idea/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../web-server-mern/.idea/web-server-mern.iml" filepath="$PROJECT_DIR$/../web-server-mern/.idea/web-server-mern.iml" />
     </modules>
   </component>
 </project>
