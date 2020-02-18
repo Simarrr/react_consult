@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Swipeable from 'react-native-swipeable';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import {connect} from "react-redux";
 
 const leftContent = <Text />;
 const rightContent = <Text />;
@@ -8,6 +9,10 @@ const rightContent = <Text />;
 
 const ListItem = ({ query, socket, name, navigation }) => {
     useEffect(() => console.log(query));
+
+    let activeQueryCounter = 0;
+
+
 
     function queryColor(inProcessing) {
         if (inProcessing) {
@@ -23,13 +28,14 @@ const ListItem = ({ query, socket, name, navigation }) => {
 
     return (
 
-        <Swipeable
+            <Swipeable
             leftContent={leftContent}
             onLeftActionActivate={() => {
                 if (name !== '') {
                     query.consultantName = name;
                     console.log(query);
                     socket.emit('takeInWork', query);
+                    activeQueryCounter++;
                 } else {
                     alert ('Введите свое имя!')
                 }
@@ -50,15 +56,19 @@ const ListItem = ({ query, socket, name, navigation }) => {
             style={{ paddingBottom: 5 }}
         >
 
-            <TouchableOpacity onPress={() =>{ navigation('Thing', {name: query.consultantName,
+            <TouchableOpacity onPress={() =>{ navigation('Thing', {consultantName: query.consultantName,
             roomNumber: query.roomNumber,
-            vendorCode: query.vendorCode,
+            name: query.name,
             size: query.size,
+            ware: query.ware,
+            image: query.images,
+            things: query.things,
+            text: query.text,
             title: query.title,
             barcode: query.barcode,
             color: query.color,
             price: query.price});
-            alert(navigation)}}>
+            }}>
             <View style={[styles.listItem, queryColor(query.inProcessing)]}>
                 <View style={styles.roomNumberBlock}>
                     <Text style={{ color: "white", fontSize: 50 }}>
@@ -79,6 +89,7 @@ const ListItem = ({ query, socket, name, navigation }) => {
                 </View>
             </View>
             </TouchableOpacity>
+
             </Swipeable>
 
     );
@@ -103,4 +114,22 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ListItem;
+
+const mapStateToProps = state => ({
+    socket: state.settings.socket,
+    server: state.settings.server,
+    consultantName: state.settings.consultantName,
+});
+
+const mapDispatchToProps = dispatch => ({
+    setServer: server => {
+        dispatch({ type: 'SET_SERVER', payload: server });
+    },
+    setSocket: socket => {
+        dispatch({ type: 'SET_SOCKET', payload: socket });
+    }
+});
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListItem);

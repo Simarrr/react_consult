@@ -1,11 +1,37 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import {Text, View, StyleSheet,Image, Dimensions, Button, TouchableOpacity} from 'react-native';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-export default class BarcodeScanner extends React.Component {
+import {Ionicons} from "@expo/vector-icons";
+import {connect} from "react-redux";
+
+const { width, height } = Dimensions.get('window');
+const qrSize = width * 0.7;
+
+class BarcodeScanner extends React.Component {
+
+    constructor(props){
+        super(props);
+    }
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: "Сканировать",
+            headerStyle: {
+                backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+        }
+    };
+
+
+
     state = {
         hasCameraPermission: null,
         scanned: false,
@@ -21,6 +47,7 @@ export default class BarcodeScanner extends React.Component {
     };
 
     render() {
+
         const { hasCameraPermission, scanned } = this.state;
 
         if (hasCameraPermission === null) {
@@ -30,27 +57,97 @@ export default class BarcodeScanner extends React.Component {
             return <Text>No access to camera</Text>;
         }
         return (
-            <View
-                style={{
-                    flex: 1,
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                }}>
-                <BarCodeScanner
-                    barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code128]}
-                    onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
-                    style={StyleSheet.absoluteFillObject}
-                />
-
-                {scanned && (
-                    <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false })} />
-                )}
-            </View>
+            <BarCodeScanner
+                barCodeTypes={[BarCodeScanner.Constants.BarCodeType.code128]}
+                onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
+                style={[StyleSheet.absoluteFill, styles.container]}
+            >
+                <View style={styles.layerTop} />
+                <View style={styles.layerCenter}>
+                    <View style={styles.layerLeft} />
+                    <View style={styles.focused} />
+                    <View style={styles.layerRight} />
+                </View>
+                <View style={styles.layerBottom} />
+            </BarCodeScanner>
         );
     }
 
     handleBarCodeScanned = ({ type, data }) => {
         this.setState({ scanned: false });
-        this.props.navigation.navigate('Thing', {barcode: data})
+        let ScannedThing;
+        this.props.socket.emit('sendScannedWare', data);
+        this.props.socket.on('receiveScannedThing', (thing) =>{
+            ScannedThing = thing;
+        });
+        this.props.navigation.navigate('Thing', {barcode: ScannedThing})
     };
-}
+}//
+
+const opacity = 'rgba(0, 0, 0, .6)';
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        marginHorizontal: 0, marginLeft: 0, marginStart: 0,
+        paddingHorizontal: 0, paddingLeft: 0, paddingStart: 0,
+        height: '125 %',
+        padding: 0
+    },
+    layerTop: {
+        flex: 1,
+        backgroundColor: opacity
+    },
+    layerCenter: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    layerLeft: {
+        flex: 1,
+        backgroundColor: opacity
+    },
+    focused: {
+        flex: 10
+    },
+    layerRight: {
+        flex: 1,
+        backgroundColor: opacity
+    },
+    layerBottom: {
+        flex: 2,
+        backgroundColor: opacity
+    },
+});
+
+//
+// const styles = StyleSheet.create({
+//
+//     qr: {
+//         marginTop: '20%',
+//         marginBottom: '20%',
+//         width: qrSize,
+//         height: qrSize,
+//     },
+//
+//     description: {
+//         fontSize: width * 0.09,
+//         marginTop: '10%',
+//         textAlign: 'center',
+//         width: '70%',
+//         color: 'white',
+//     },
+//     container: {
+//         flex: 2,
+//         alignItems: 'stretch',
+//         width: 500 ,
+//         height: 500,
+//     },
+// });
+
+const mapStateToProps = state => ({
+    socket: state.settings.socket,
+    server: state.settings.server,
+    consultantName: state.settings.consultantName,
+});
+
+export default connect(mapStateToProps)(BarcodeScanner);
