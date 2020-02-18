@@ -20,7 +20,7 @@
   import SettingsScreen from "./views/SettingsScreen";
   import AdminPanel from "./views/Auth/AdminPanel";
   import {
-  Button, StyleSheet, Text, TouchableOpacity, View
+   View
 } from 'react-native';
   import {createBottomTabNavigator} from "react-navigation-tabs";
 
@@ -43,8 +43,6 @@
           iconName = `md-barcode`;
         }
 
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
         return <Ionicons name={iconName} size={25} color={tintColor} />;
       },
     }),
@@ -65,7 +63,7 @@
     Main: {
       screen: MainStack,
         navigationOptions: ({navigation}) => ({
-            title: `Запросцы`,
+            title: `Запросы`,
             headerBackTitle: null,
             headerLeft: null,
             headerRight: (
@@ -77,11 +75,6 @@
                 justifyContent: 'space-around',
               }}>
                 <ConnectionComponent navigate = {navigation}/>
-                {/*  <Text>  </Text>*/}
-                {/*<TouchableOpacity onPress = {() => {navigation.navigate("Set")}}>*/}
-                {/*  <Ionicons name={`ios-settings`} size={40} color={'tomato'} />*/}
-                {/*</TouchableOpacity>*/}
-                {/*  <Text>  </Text>*/}
                 </View>
                 ),
         }),
@@ -107,13 +100,6 @@
         headerShown: false,
       }),
     },
-     // Scan: {
-     //   screen: BarcodeScanner,
-     //   navigationOptions: () => ({
-     //     title: `Сканировать`,
-     //     headerBackTitle: null,
-     //   }),
-     // }
     }, {
     headerMode: 'screen',
     mode: 'modal',
