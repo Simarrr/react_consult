@@ -1,9 +1,7 @@
 import React from "react";
-import {Button, ScrollView, Text, Image, View, StyleSheet, SafeAreaView, FlatList, Dimensions} from "react-native";
+import {Button, ScrollView, Text, Image, View, StyleSheet, SafeAreaView, FlatList} from "react-native";
 import {connect} from "react-redux";
-import ListItem from "../components/ListItem";
 import ThingItem from "../components/ThingItem";
-
 
 class ThingScreen extends React.Component {
     state ={
@@ -11,16 +9,12 @@ class ThingScreen extends React.Component {
         validUrl: false,
     };
 
-    // componentDidMount() {
-    //     this.setState({image: this.props.navigation.state.params.image});
-    // }
     onError(error){
         this.setState({ image: require('./../assets/sport-master-logo-png-transparent.png')})
         alert("Error");
     }
 
     render() {
-        alert("Text"+this.props.navigation.state.params.text);
         if (this.props.navigation.state.params.text === "Запрос товара") {
             return (
                 <View>
@@ -92,14 +86,14 @@ class ThingScreen extends React.Component {
 
                     <SafeAreaView>
 
-                        {/*<FlatList*/}
-                        {/*    style={styles.containter}*/}
-                        {/*    data={things}*/}
-                        {/*    renderItem={({ item, index, separators }) =>*/}
-                        {/*        <ThingItem thing={item} socket={this.props.socket} name={this.props.consultantName} navigation={navigate} />*/}
-                        {/*    }*/}
-                        {/*    keyExtractor={(item, index) => index.toString()}*/}
-                        {/*/>*/}
+                        <FlatList
+                            style={styles.containter}
+                            data={things}
+                            renderItem={({ item, index, separators }) =>
+                                <ThingItem thing={item} socket={this.props.socket} name={this.props.consultantName} navigation={navigate} />
+                            }
+                            keyExtractor={(item, index) => index.toString()}
+                        />
                     </SafeAreaView>
                 </ScrollView>
             )
@@ -113,8 +107,6 @@ class ThingScreen extends React.Component {
         </View>)
     }
 }
-
-const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     title: {

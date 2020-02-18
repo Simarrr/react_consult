@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     infoBlock: {
-        // alignItems: "center",
         color: "white",
         justifyContent: "center",
     }

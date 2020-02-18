@@ -1,15 +1,8 @@
 import * as React from 'react';
-import {Text, View, StyleSheet,Image, Dimensions, Button, TouchableOpacity} from 'react-native';
-import Constants from 'expo-constants';
+import {Text, View, StyleSheet, Dimensions} from 'react-native';
 import * as Permissions from 'expo-permissions';
-
 import { BarCodeScanner } from 'expo-barcode-scanner';
-
-import {Ionicons} from "@expo/vector-icons";
 import {connect} from "react-redux";
-
-const { width, height } = Dimensions.get('window');
-const qrSize = width * 0.7;
 
 class BarcodeScanner extends React.Component {
 
@@ -118,31 +111,6 @@ const styles = StyleSheet.create({
         backgroundColor: opacity
     },
 });
-
-//
-// const styles = StyleSheet.create({
-//
-//     qr: {
-//         marginTop: '20%',
-//         marginBottom: '20%',
-//         width: qrSize,
-//         height: qrSize,
-//     },
-//
-//     description: {
-//         fontSize: width * 0.09,
-//         marginTop: '10%',
-//         textAlign: 'center',
-//         width: '70%',
-//         color: 'white',
-//     },
-//     container: {
-//         flex: 2,
-//         alignItems: 'stretch',
-//         width: 500 ,
-//         height: 500,
-//     },
-// });
 
 const mapStateToProps = state => ({
     socket: state.settings.socket,

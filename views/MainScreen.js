@@ -7,20 +7,13 @@ import {
     SafeAreaView,
     Button,
     BackHandler,
-    Text,
-    TouchableOpacity,
-    TextInput
 } from 'react-native';
 import io from 'socket.io-client';
 import {NavigationEvents} from 'react-navigation';
-
 import { connect } from 'react-redux';
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
-
 import ListItem from "../components/ListItem";
-
-
 
 class MainScreen extends React.Component{
 
@@ -30,15 +23,13 @@ class MainScreen extends React.Component{
 
     state = {
         token: '',
-        //token: 'ExponentPushToken[lBHA4PM6GldQTVnapO0xxH]',
         notification: null,
         title: 'Hello World',
         body: 'Say something!',
-        queriesArray: [{title:"Hello",
-        text: "Запрос товара"}, "World"],
+        queriesArray: [],
     };
 
-    static navigationOptions = ({ navigation }) => {
+    static navigationOptions = ({  }) => {
         return {
             title: "Запросища",
             headerStyle: {
@@ -72,20 +63,6 @@ class MainScreen extends React.Component{
         });
     }
 
-
-
-    onFocusFunction = ({sockets}) => {
-        alert("Work");
-        if (sockets !== undefined) {
-            sockets.emit("giveMeQueries", () => {
-                console.log("nav rerender")
-            });
-        }
-        //this.forceUpdate();
-    };
-
-
-
     componentDidMount() {
 
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
@@ -99,22 +76,12 @@ class MainScreen extends React.Component{
             reconnectionAttempts: Infinity
         });
 
-
-        // this.focusListener = this.props.navigation.addListener('didFocus', () => {
-        //     socket.emit('giveMeQueries');
-        //     this.forceUpdate();
-        // });
-
             this.props.setSocket(socket);
             console.log(socket.connected);
 
-        socket.emit('giveMeQueries', () =>{
-            console.log("sdsd");
-            alert("words");
-        });
+        socket.emit('giveMeQueries');
         setTimeout(() =>{
         let token = this.state.token;
-            console.log(token);
         socket.emit('getAppToken', token);
         console.log("I am token" + token);}, 17000);
 
@@ -125,11 +92,6 @@ class MainScreen extends React.Component{
             queries.sort(function(a, b) {
                 return a.inProcessing - b.inProcessing;
             });
-
-
-            // if(queries != this.state.queriesArray){
-            //     this.sendPushNotification(this.state.token, this.state.title, "Priv").then(r => "")
-            // }
             this.setState( { queriesArray: queries });
             console.log(this.state.queriesArray)
         });
@@ -149,18 +111,13 @@ class MainScreen extends React.Component{
             console.log(this.state.queriesArray)
 
         })
-           //
     }
 
     componentWillUnmount () {
-        //this.focusListener.remove()
         BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
 
     onBackPress = () => {
-
-        alert("Back");
-
         return true;
     };//
 
@@ -175,7 +132,6 @@ class MainScreen extends React.Component{
          }
          try {
              const token = await Notifications.getExpoPushTokenAsync();
-             alert("ya est token" + token);
              this.setState({
                  token: token,
              });
@@ -183,7 +139,6 @@ class MainScreen extends React.Component{
              console.log(e);
              alert("No internet")
          }
-       // console.log(this.state.token);
      }
 
 
@@ -195,17 +150,6 @@ class MainScreen extends React.Component{
     render () {
         const {navigate} = this.props.navigation;
         let queries =  this.state.queriesArray;
-        // alert("Array"+ queries);
-        // alert("State"+this.state.queriesArray);
-        //alert("I rerender"+queries.length);
-       // this.forceUpdate(() => {alert("Updated");});
-        //
-        // if(this.props.socket != null) {
-        //     alert("Update");
-        //     this.props.socket.emit("giveMeQueries")
-        // }
-        //
-
 
         return (
 
@@ -223,43 +167,6 @@ class MainScreen extends React.Component{
                         }
                     keyExtractor={(item, index) => index.toString()}
                 />
-
-               <Button
-                                       title={'Socket'}
-
-                onPress={() => {
-                    if(this.props.socket.connected)
-                    alert("Yup");
-                    else alert("Nope");
-                                             }}
-                                     />
-                <Button
-                    title={'Token'}
-                    onPress={() => {
-                        alert(this.state.token);
-                    }}
-                />
-                <Button
-                    title={'Change queries'}
-                    onPress={() => {
-                        this.setState({queriesArray: ["h","s","s"],});
-                    }}
-                />
-
-
-                <Button
-                    title={'Notify'}
-                    onPress={() => {
-                        this.sendPushNotification(this.state.token).then(r => "");
-                        alert("Notify");
-                    }}
-                />
-                <Button
-                    title={'Queries'}
-                    onPress={() => {
-                        alert(this.state.queriesArray);
-                    }}
-                />
             </SafeAreaView>
 
             </ScrollView>
@@ -270,8 +177,6 @@ class MainScreen extends React.Component{
     }
 
 }
-//
-//setTimeout(() => this.forceUpdate(), 1000);
 
 const styles = StyleSheet.create({
     container: {
