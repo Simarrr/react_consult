@@ -17,11 +17,11 @@ const ListItem = ({ query, socket, name, navigation }) => {
     function queryColor(inProcessing) {
         if (inProcessing) {
             return {
-                backgroundColor: "blue"
+                backgroundColor: "blue" //if request is in work
             };
         }
         return {
-            backgroundColor: "red"
+            backgroundColor: "red" //if request is not in work
         };
     }
 
@@ -34,7 +34,7 @@ const ListItem = ({ query, socket, name, navigation }) => {
                 if (name !== '') {
                     query.consultantName = name;
                     console.log(query);
-                    socket.emit('takeInWork', query);
+                    socket.emit('takeInWork', query); //Calls action to change state in array object
                     activeQueryCounter++;
                 } else {
                     alert ('Введите свое имя!')
@@ -45,7 +45,7 @@ const ListItem = ({ query, socket, name, navigation }) => {
             onRightActionActivate={() => {
                 if (query.inProcessing) {
                     if (query.consultantName === name) {
-                        socket.emit('completed', query);
+                        socket.emit('completed', query); // Removes object query from array
                     } else {
                         alert('Заявку выполняет другой сотрудник');
                     }
@@ -55,7 +55,7 @@ const ListItem = ({ query, socket, name, navigation }) => {
             }}
             style={{ paddingBottom: 5 }}
         >
-
+            // OnPress sends to ThingScreen View with given parametrs
             <TouchableOpacity onPress={() =>{ navigation('Thing', {consultantName: query.consultantName,
             roomNumber: query.roomNumber,
             name: query.name,
@@ -113,22 +113,12 @@ const styles = StyleSheet.create({
     }
 });
 
-
+//Get store socket, server and consultantName
 const mapStateToProps = state => ({
     socket: state.settings.socket,
     server: state.settings.server,
     consultantName: state.settings.consultantName,
 });
 
-const mapDispatchToProps = dispatch => ({
-    setServer: server => {
-        dispatch({ type: 'SET_SERVER', payload: server });
-    },
-    setSocket: socket => {
-        dispatch({ type: 'SET_SOCKET', payload: socket });
-    }
-});
 
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(ListItem);
+export default connect(mapStateToProps)(ListItem);

@@ -19,12 +19,10 @@
   import BarcodeScanner from "./views/BarcodeScanner";
   import SettingsScreen from "./views/SettingsScreen";
   import AdminPanel from "./views/Auth/AdminPanel";
-  import {
-   View
-} from 'react-native';
+  import View from 'react-native';
   import {createBottomTabNavigator} from "react-navigation-tabs";
 
-
+  //Bottom menu navigator
   const MainStack = createBottomTabNavigator({
     Main: {
       screen: MainScreen,
@@ -38,7 +36,7 @@
         const { routeName } = navigation.state;
         let iconName;
         if (routeName === 'Main') {
-          iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+          iconName = `ios-information-circle${focused ? '' : '-outline'}`; //Changes icon (color)
         } else if (routeName === 'Scan') {
           iconName = `md-barcode`;
         }
@@ -52,6 +50,7 @@
     },
   });
 
+  //Main app Navigator
   const StackNavigator = createStackNavigator({
    Auth: {
      screen: AuthScreen,
@@ -74,6 +73,7 @@
                 alignItems: "center",
                 justifyContent: 'space-around',
               }}>
+                {/*Connection state, refresh button and settings button*/}
                 <ConnectionComponent navigate = {navigation}/>
                 </View>
                 ),

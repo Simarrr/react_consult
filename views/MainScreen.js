@@ -5,7 +5,6 @@ import {
     FlatList,
     ScrollView,
     SafeAreaView,
-    Button,
     BackHandler,
 } from 'react-native';
 import io from 'socket.io-client';
@@ -31,7 +30,7 @@ class MainScreen extends React.Component{
 
     static navigationOptions = ({  }) => {
         return {
-            title: "Запросища",
+            title: "Запросы",
             headerStyle: {
                 backgroundColor: '#f4511e',
             },
@@ -79,18 +78,18 @@ class MainScreen extends React.Component{
             this.props.setSocket(socket);
             console.log(socket.connected);
 
-        socket.emit('giveMeQueries');
+        socket.emit('giveMeQueries'); // Asks to get array of requests
         setTimeout(() =>{
         let token = this.state.token;
-        socket.emit('getAppToken', token);
-        console.log("I am token" + token);}, 17000);
+        socket.emit('getAppToken', token); // Send push token to server for handling notification in background mode
+        console.log("I am token" + token);}, 17000); // Wait until get push notification token
 
 
-
+        // Getting array from server
         socket.on('giveYouQueries', (queries) => {
             console.log("this is queries:\n" + queries);
             queries.sort(function(a, b) {
-                return a.inProcessing - b.inProcessing;
+                return a.inProcessing - b.inProcessing; // sorts requests (firstly not accepted)
             });
             this.setState( { queriesArray: queries });
             console.log(this.state.queriesArray)
@@ -101,6 +100,7 @@ class MainScreen extends React.Component{
             alert("Disconnected");
         });
 
+        // Get updated array of requests
         socket.on('getQueries', (queries) => {
             queries.sort(function(a, b) {
                 return a.inProcessing - b.inProcessing;
@@ -114,6 +114,7 @@ class MainScreen extends React.Component{
     }
 
     componentWillUnmount () {
+        // removes back button
         BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
 
@@ -156,19 +157,17 @@ class MainScreen extends React.Component{
             <View>
                 <NavigationEvents onDidFocus={() => console.log('I am triggered')} />
             <ScrollView>
-
             <SafeAreaView>
-
                 <FlatList
-                    style={styles.conainer}
+                    style={styles.container}
                     data={queries}
-                    renderItem={({ item, index, separators }) =>
+                    renderItem={({ item}) =>
+                            // Displays the list of requests
                             <ListItem query={item} socket={this.props.socket} name={this.props.consultantName} navigation={navigate} />
                         }
                     keyExtractor={(item, index) => index.toString()}
                 />
             </SafeAreaView>
-
             </ScrollView>
 
             </View>

@@ -38,22 +38,13 @@ class ConnectionComponent extends React.Component {
     }
 }
 
-
+//Get store socket, server and consultantName
 const mapStateToProps = state => ({
     socket: state.settings.socket,
     server: state.settings.server,
     consultantName: state.settings.consultantName,
 });
 
-const mapDispatchToProps = dispatch => ({
-    setServer: server => {
-        dispatch({ type: 'SET_SERVER', payload: server });
-    },
-    setSocket: socket => {
-        dispatch({ type: 'SET_SOCKET', payload: socket });
-    }
-});
 
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectionComponent);
+export default connect(mapStateToProps)(ConnectionComponent);

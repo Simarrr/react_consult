@@ -85,10 +85,10 @@ class AuthScreen extends React.Component{
             appId: "1:860818084999:web:393bad11037763fef61422",
             measurementId: "G-QBDFPYYN4R"
         };  // apiKey, authDomain, etc. (see above)
-
+        // initialize firebase database according configs
         firebase.initializeApp(firebaseConfig);
         let database = firebase.database();
-        this.props.setDatabase(database);
+        this.props.setDatabase(database); // Store database
 
         this.state = {
             isReady: false,
@@ -165,6 +165,7 @@ class AuthScreen extends React.Component{
             let pass = "";
             if(name !== "" && isNameCorrect(name)) {
                 database.ref('users/' + name).on('value', function (snapshot) {
+                    // Checks login(name) existance
                     if (snapshot.exists()) {
                         pass = snapshot.val().password;
                         thisRef.setState({truePassword: pass});
@@ -273,9 +274,11 @@ class AuthScreen extends React.Component{
                         <Animated.View style={styles.button}>
                             <Text
                                 style={{fontSize: 20, fontWeight: 'bold', color: "white"}}
+                                // Validating name and password
                                 onPress={() => {
+                                    // Admin Panel login and password
                                     if(this.state.name === "" && this.state.password === "" ) {
-                                        this.props.navigation.navigate('Admin');
+                                        this.props.navigation.navigate('Admin'); // Navigates to Admin Panel
                                     } else if ((this.state.truePassword !== "") && (this.state.password === this.state.truePassword)) {
                                             this.props.setName(this.state.name, this.props.navigation.navigate)
                                         } else if (this.state.truePassword === "") {
@@ -296,7 +299,7 @@ class AuthScreen extends React.Component{
 }
 
 const isNameCorrect = name => {
-    const nameRegex = /^[а-яё a-z]+$/i ;
+    const nameRegex = /^[а-яё a-z]+$/i ; // Reqular expression for non digit symbols
     return nameRegex.test(name);
 };
 
@@ -352,12 +355,6 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         borderColor: 'rgba(0, 0, 0, 0.2)'
     },
-});
-
-const mapStateToProps = state => ({
-    socket: state.settings.socket,
-    server: state.settings.server,
-    consultantName: state.settings.consultantName,
 });
 
 const mapDispatchToProps = dispatch => ({

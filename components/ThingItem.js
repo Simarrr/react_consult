@@ -2,14 +2,11 @@ import React, { useEffect } from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 import {connect} from "react-redux";
 
-const leftContent = <Text />;
-const rightContent = <Text />;
 const { width, height } = Dimensions.get('window');
 
 const ThingItem = ({ thing, navigation }) => {
     useEffect(() => console.log(thing));
 
-    let activeQueryCounter = 0;
 
     return (
         <View style={{ paddingBottom: 5 }}>
@@ -71,15 +68,4 @@ const mapStateToProps = state => ({
     consultantName: state.settings.consultantName,
 });
 
-const mapDispatchToProps = dispatch => ({
-    setServer: server => {
-        dispatch({ type: 'SET_SERVER', payload: server });
-    },
-    setSocket: socket => {
-        dispatch({ type: 'SET_SOCKET', payload: socket });
-    }
-});
-
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(ThingItem);
+export default connect(mapStateToProps)(ThingItem);

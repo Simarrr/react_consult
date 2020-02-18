@@ -15,6 +15,7 @@ class SettingsScreen extends React.Component {
 
             setTimeout(() => {
                 console.log(this.props.server);
+                // Updates socket connection
                 let socket = io(`http://${this.props.server}/consultants`
 
                     , {
@@ -40,9 +41,8 @@ class SettingsScreen extends React.Component {
                     justifyContent: 'space-around',
                 }}>
                     <Text>     </Text>
-                    <TouchableOpacity onPress = {() => {navigation.navigate("Main",{
-                        queriesArray: "hello",
-                    })}}>
+                    {/* Navigate back to Main Screen*/}
+                    <TouchableOpacity onPress = {() => {navigation.navigate("Main")}}>
                         <Ionicons name={`md-arrow-back`} size={27} color={'black'} />
                     </TouchableOpacity>
 
@@ -65,20 +65,8 @@ class SettingsScreen extends React.Component {
                 <Button
                     title={'Выход'}
                     onPress={() => {
-                        this.props.navigation.navigate("Auth");
+                        this.props.navigation.navigate("Auth"); // Navigate to Auth Screen
                         this.props.socket.disconnect();
-                    }}
-                />
-                <Button
-                    title={'Server'}
-                    onPress={() => {
-                        alert(this.props.server);
-                    }}
-                />
-                <Button
-                    title={'Queries'}
-                    onPress={() => {
-                        this.props.socket.emit('giveMeQueries');
                     }}
                 />
             </View>

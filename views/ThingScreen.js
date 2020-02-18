@@ -4,10 +4,6 @@ import {connect} from "react-redux";
 import ThingItem from "../components/ThingItem";
 
 class ThingScreen extends React.Component {
-    state ={
-        image: { uri: `${this.props.navigation.state.params.image}`},
-        validUrl: false,
-    };
 
     onError(error){
         this.setState({ image: require('./../assets/sport-master-logo-png-transparent.png')})
@@ -15,7 +11,7 @@ class ThingScreen extends React.Component {
     }
 
     render() {
-        if (this.props.navigation.state.params.text === "Запрос товара") {
+        if (this.props.navigation.state.params.text === "Запрос товара") { // Different JSX for different request types
             return (
                 <View>
                     <ScrollView>
@@ -55,12 +51,6 @@ class ThingScreen extends React.Component {
                         </View>
 
                         <Text> {this.props.navigation.state.params.barcode}</Text>
-                        <Button
-                            title={'Query'}
-                            onPress={() => {
-                                alert(this.state.image)
-                            }}
-                        />
 
                     </ScrollView>
                 </View>
@@ -83,9 +73,8 @@ class ThingScreen extends React.Component {
 
             return (
                 <ScrollView>
-
                     <SafeAreaView>
-
+                        {/* Generates a list of things */}
                         <FlatList
                             style={styles.containter}
                             data={things}

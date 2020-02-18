@@ -62,15 +62,12 @@ const styles = StyleSheet.create({
     },
 });
 
+//Get store socket, server, database object and consultantName
 const mapStateToProps = state => ({
     socket: state.settings.socket,
     database: state.settings.database,
     server: state.settings.server,
     consultantName: state.settings.consultantName,
 });
-
-
-
-
 
 export default connect(mapStateToProps)(AdminPanel);
