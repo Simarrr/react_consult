@@ -19,7 +19,7 @@
   import BarcodeScanner from "./views/BarcodeScanner";
   import SettingsScreen from "./views/SettingsScreen";
   import AdminPanel from "./views/Auth/AdminPanel";
-  import View from 'react-native';
+  import {View, Text} from 'react-native';
   import {createBottomTabNavigator} from "react-navigation-tabs";
 
   //Bottom menu navigator
@@ -54,7 +54,7 @@
   const StackNavigator = createStackNavigator({
    Auth: {
      screen: AuthScreen,
-       navigationOptions: () => ({
+       navigationOptions: ({navigation}) => ({
            title: `Aвторизация`,
            headerBackTitle: null,
          }),
@@ -65,7 +65,7 @@
             title: `Запросы`,
             headerBackTitle: null,
             headerLeft: null,
-            headerRight: (
+            headerRight:
               <View style={{
                 width: 200,
                 flex: 2,
@@ -76,7 +76,7 @@
                 {/*Connection state, refresh button and settings button*/}
                 <ConnectionComponent navigate = {navigation}/>
                 </View>
-                ),
+
         }),
     },
     Thing: {

@@ -3,7 +3,6 @@
     "name": "consultant",
     "slug": "expoProject",
     "privacy": "public",
-    "sdkVersion": "34.0.0",
     "android": {
       "package": "com.concultant.croc",
       "versionCode": 1

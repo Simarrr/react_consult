@@ -74,21 +74,7 @@ class AuthScreen extends React.Component{
     constructor(props) {
         super(props);
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBTgezGAUPxYfENNQRsunGxyvG8LeBo-Ls",
-            authDomain: "react-consult.firebaseapp.com",
-            databaseURL: "" +
-                "",
-            projectId: "react-consult",
-            storageBucket: "react-consult.appspot.com",
-            messagingSenderId: "860818084999",
-            appId: "1:860818084999:web:393bad11037763fef61422",
-            measurementId: "G-QBDFPYYN4R"
-        };  // apiKey, authDomain, etc. (see above)
-        // initialize firebase database according configs
-        firebase.initializeApp(firebaseConfig);
-        let database = firebase.database();
-        this.props.setDatabase(database); // Store database
+
 
         this.state = {
             isReady: false,
@@ -163,15 +149,7 @@ class AuthScreen extends React.Component{
             this.setState({name: name });
             let thisRef = this;
             let pass = "";
-            if(name !== "" && isNameCorrect(name)) {
-                database.ref('users/' + name).on('value', function (snapshot) {
-                    // Checks login(name) existance
-                    if (snapshot.exists()) {
-                        pass = snapshot.val().password;
-                        thisRef.setState({truePassword: pass});
-                    }//
-                }).bind(this);
-            }
+
         };
 
         this.passwordInputHandler = password => {
@@ -279,13 +257,7 @@ class AuthScreen extends React.Component{
                                     // Admin Panel login and password
                                     if(this.state.name === "" && this.state.password === "" ) {
                                         this.props.navigation.navigate('Admin'); // Navigates to Admin Panel
-                                    } else if ((this.state.truePassword !== "") && (this.state.password === this.state.truePassword)) {
-                                            this.props.setName(this.state.name, this.props.navigation.navigate)
-                                        } else if (this.state.truePassword === "") {
-                                            alert("Неверный логин");
-                                        } else if (this.state.password !== this.state.truePassword) {
-                                            alert("Неверный пароль");
-                                        }
+                                    } else this.props.navigation.navigate('Main');
 
                                 }}
                             >Войти</Text>
@@ -373,4 +345,4 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthScreen);
+export default connect(mapDispatchToProps)(AuthScreen);
