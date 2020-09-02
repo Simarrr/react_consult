@@ -8,8 +8,11 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@aspnet/signalr": "^1.1.4",
     "@babel/runtime": "^7.6.3",
     "@expo/vector-icons": "^10.0.0",
+    "@microsoft/signalr": "^3.1.7",
+    "axios": "^0.20.0",
     "engine.io-client": "3.3.2",
     "exp": "^57.2.1",
     "expo": "^38.0.0",
@@ -30,6 +33,7 @@
     "react-native-gesture-handler": "~1.6.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-reanimated": "~1.9.0",
+    "react-native-signalr": "^1.0.6",
     "react-native-svg": "12.1.0",
     "react-native-swipeable": "^0.6.0",
     "react-native-web": "~0.11.7",

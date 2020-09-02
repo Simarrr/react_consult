@@ -6,6 +6,7 @@ import {
     ScrollView,
     SafeAreaView,
     BackHandler,
+    TextInput
 } from 'react-native';
 import io from 'socket.io-client';
 import {NavigationEvents} from 'react-navigation';
@@ -13,6 +14,10 @@ import { connect } from 'react-redux';
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import ListItem from "../components/ListItem";
+import {HubConnection, HubConnectionBuilder, signalR} from '@microsoft/signalr';
+
+
+
 
 class MainScreen extends React.Component{
 
@@ -25,7 +30,35 @@ class MainScreen extends React.Component{
         notification: null,
         title: 'Hello World',
         body: 'Say something!',
-        queriesArray: [],
+        queriesArray: [{
+            "userid": "8D1D8C64-F88D-4B8F-9FD8-779248544F00",
+            "consultantName": "",
+            "roomNumber": "2",
+            "status": true,
+            "title": "Запрос товара",
+            "type": 1,
+            "products": [{
+                "name": "Кроссовки ZENDEN active",
+                "price": 2499,
+                "vendorcode": "189-01MV-002TT",
+                "brand": "ZENDEN active",
+                "sizes": [
+                    { "name": "40", "EU": "40" },
+                    { "name": "41", "EU": "41" },
+                    { "name": "42", "EU": "42" },
+                    { "name": "43", "EU": "43" },
+                    { "name": "44", "EU": "44" },
+                    { "name": "45", "EU": "45" }
+                ],
+                "barcode": "2345678754567",
+                "gender": 0,
+                "category": {
+                    "name": "Кроссовки"
+                },
+                "images": [{"url": "njjj"},
+                    {"url": "nnjj"}]
+            }]
+        }],
     };
 
     static navigationOptions = ({  }) => {
@@ -63,57 +96,34 @@ class MainScreen extends React.Component{
     }
 
     componentDidMount() {
+        alert("hellhho");
+        console.log(this.state.queriesArray);
 
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
 
+
     this.registerForPushNotifications().then(r => "");
+    this.getQueries();
+    this.interval = setInterval(() => {
+        this.getQueries();
+    }, 10000);
 
-        let socket = io(`http://${this.props.server}/consultants`,{
-            reconnection: true,
-            reconnectionDelay: 1000,
-            reconnectionDelayMax : 5000,
-            reconnectionAttempts: Infinity
-        });
+    }
 
-            this.props.setSocket(socket);
-            console.log(socket.connected);
+    getQueries(){
 
-        socket.emit('giveMeQueries'); // Asks to get array of requests
-        setTimeout(() =>{
-        let token = this.state.token;
-        socket.emit('getAppToken', token); // Send push token to server for handling notification in background mode
-        console.log("I am token" + token);}, 17000); // Wait until get push notification token
-
-
-        // Getting array from server
-        socket.on('giveYouQueries', (queries) => {
-            console.log("this is queries:\n" + queries);
-            queries.sort(function(a, b) {
-                return a.inProcessing - b.inProcessing; // sorts requests (firstly not accepted)
+        fetch("https://api.chucknorris.io/jokes/random")
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                this.setState( { queriesArray: res.value});
             });
-            this.setState( { queriesArray: queries });
-            console.log(this.state.queriesArray)
-        });
 
-
-        socket.on('disconnect', function(){
-            alert("Disconnected");
-        });
-
-        // Get updated array of requests
-        socket.on('getQueries', (queries) => {
-            queries.sort(function(a, b) {
-                return a.inProcessing - b.inProcessing;
-            });
-            if(this.state.queriesArray.length !== queries.length)
-            this.sendPushNotification(this.state.token).then(r => "");
-            this.setState( { queriesArray: queries });
-            console.log(this.state.queriesArray)
-
-        })
     }
 
     componentWillUnmount () {
+        clearInterval(this.interval);
         // removes back button
         BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
@@ -161,10 +171,7 @@ class MainScreen extends React.Component{
                 <FlatList
                     style={styles.container}
                     data={queries}
-                    renderItem={({ item}) =>
-                            // Displays the list of requests
-                            <ListItem query={item} socket={this.props.socket} name={this.props.consultantName} navigation={navigate} />
-                        }
+                    renderItem={({item}) =><ListItem query={item} name={this.props.consultantName} navigation={navigate} />}
                     keyExtractor={(item, index) => index.toString()}
                 />
             </SafeAreaView>

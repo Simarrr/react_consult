@@ -7,7 +7,7 @@ const leftContent = <Text />;
 const rightContent = <Text />;
 
 
-const ListItem = ({ query, socket, name, navigation }) => {
+const ListItem = ({ query, name, navigation }) => {
     useEffect(() => console.log(query));
 
     let activeQueryCounter = 0;
@@ -32,9 +32,9 @@ const ListItem = ({ query, socket, name, navigation }) => {
             leftContent={leftContent}
             onLeftActionActivate={() => {
                 if (name !== '') {
-                    query.consultantName = name;
+                    query.userid = name;
                     console.log(query);
-                    socket.emit('takeInWork', query); //Calls action to change state in array object
+                    //socket.emit('takeInWork', query); //Calls action to change state in array object
                     activeQueryCounter++;
                 } else {
                     alert ('Введите свое имя!')
@@ -43,9 +43,9 @@ const ListItem = ({ query, socket, name, navigation }) => {
             }}
             rightContent={rightContent}
             onRightActionActivate={() => {
-                if (query.inProcessing) {
+                if (query.status) {
                     if (query.consultantName === name) {
-                        socket.emit('completed', query); // Removes object query from array
+                        //socket.emit('completed', query); // Removes object query from array
                     } else {
                         alert('Заявку выполняет другой сотрудник');
                     }
@@ -55,33 +55,33 @@ const ListItem = ({ query, socket, name, navigation }) => {
             }}
             style={{ paddingBottom: 5 }}
         >
-            // OnPress sends to ThingScreen View with given parametrs
-            <TouchableOpacity onPress={() =>{ navigation('Thing', {consultantName: query.consultantName,
-            roomNumber: query.roomNumber,
-            name: query.name,
-            size: query.size,
-            ware: query.ware,
-            image: query.images,
-            things: query.things,
-            text: query.text,
-            title: query.title,
-            barcode: query.barcode,
-            color: query.color,
-            price: query.price});
+
+            <TouchableOpacity onPress={() =>{ navigation('Thing', {
+                consultantName: query.consultantName,
+                roomNumber: query.roomNumber,
+                name: query.products[0].name,
+                size: query.products[0].sizes[0].name,
+                ware: query.products[0].vendorcode,
+                image: query.products[0].images[0].url,
+                things: query.products,
+                text: query.title,
+                barcode: query.products[0].barcode,
+                price: query.products[0].price
+            });
             }}>
-            <View style={[styles.listItem, queryColor(query.inProcessing)]}>
+            <View style={[styles.listItem, queryColor(query.status)]}>
                 <View style={styles.roomNumberBlock}>
                     <Text style={{ color: "white", fontSize: 50 }}>
                         {query.roomNumber}
                     </Text>
                 </View>
                 <View style={styles.infoBlock}>
-                    <Text style={{ color: "white", fontSize: 30}}>{query.text}</Text>
+                    <Text style={{ color: "white", fontSize: 30}}>{query.title}</Text>
                     <Text style={{ color: "white" }}>{query.time}</Text>
-                    { query.type === 'BRING_THING'
+                    { query.type === 1
                         ? <>
-                            <Text style={{ color: "white" }}>{query.vendorCode}</Text>
-                            <Text style={{ color: "white" }}>{query.size}</Text>
+                            <Text style={{ color: "white" }}>{query.products[0].vendorCode}</Text>
+                            <Text style={{ color: "white" }}>{query.products[0].sizes[0].name}</Text>
                         </>
                         : null
                     }
@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
 
 //Get store socket, server and consultantName
 const mapStateToProps = state => ({
-    socket: state.settings.socket,
     server: state.settings.server,
     consultantName: state.settings.consultantName,
 });

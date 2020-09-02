@@ -39,10 +39,10 @@ class ThingScreen extends React.Component {
                         <View style={styles.sizeAndColor}>
                             <Text
                                 style={{flex: 1, textAlign: "center"}}> {this.props.navigation.state.params.size}</Text>
-                            <Text style={{
-                                flex: 1,
-                                textAlign: "center"
-                            }}> {this.props.navigation.state.params.color}</Text>
+                            {/*<Text style={{*/}
+                            {/*    flex: 1,*/}
+                            {/*    textAlign: "center"*/}
+                            {/*}}> {this.props.navigation.state.params.color}</Text>*/}
                         </View>
 
                         <View>

@@ -6,7 +6,7 @@ import Svg, {Image, Circle, ClipPath} from 'react-native-svg';
 import Animated, {Easing} from 'react-native-reanimated';
 import {TapGestureHandler, State} from "react-native-gesture-handler";
 import { connect } from 'react-redux';
-import firebase from "firebase";
+import api from "../../components/api";
 
 
 
@@ -160,7 +160,7 @@ class AuthScreen extends React.Component{
 
 
     async _loadAssetsAsync() {
-        const imageAssets = cacheImages([require('../../assets/sport-master-logo-png-transparent.png')]);
+        const imageAssets = cacheImages([require('../../assets/zenden.jpg')]);
 
         await Promise.all([...imageAssets]);
     }
@@ -200,7 +200,7 @@ class AuthScreen extends React.Component{
                             <Circle r={height+50} cx={width/2}/>
                         </ClipPath>
                         <Image
-                            href={require('../../assets/sport-master-logo-png-transparent.jpg')}
+                            href={require('../../assets/zenden.jpg')}
                             width={width}
                             heigth={height+50}
                             preserveAspectRatio='xMidYMid slice'
@@ -255,9 +255,16 @@ class AuthScreen extends React.Component{
                                 // Validating name and password
                                 onPress={() => {
                                     // Admin Panel login and password
-                                    if(this.state.name === "" && this.state.password === "" ) {
-                                        this.props.navigation.navigate('Admin'); // Navigates to Admin Panel
-                                    } else this.props.navigation.navigate('Main');
+                                    if(this.state.name && this.state.name !== "" ) {
+                                        //TODO users authorization
+                                        api.login.userLogin(this.state.name)
+                                            .then(consultantId =>{
+                                                if(consultantId) {
+                                                    this.props.navigation.navigate('Main');
+                                                }
+                                            });
+                                         // Navigates to Admin Panel
+                                    }
 
                                 }}
                             >Войти</Text>
