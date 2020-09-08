@@ -10,6 +10,10 @@ class SettingsScreen extends React.Component {
     constructor(props) {
         super(props);
 
+        this.serverApiInputHandler = name => {
+            this.props.setServerApi(name);
+        }
+
         this.nameInputHandler = name => {
             this.props.setServer(name);
 
@@ -62,11 +66,24 @@ class SettingsScreen extends React.Component {
                     style={styles.textInput}
                     onChangeText={this.nameInputHandler}
                 />
+
+                <TextInput
+                    placeholder="Введите api сервера"
+                    style={styles.textInput}
+                    onChangeText={this.serverApiInputHandler}
+                />
+
+                <Button
+                    title={'Api'}
+                    onPress={() => {
+                        alert(this.props.serverApi) // Navigate to Auth Screen
+                    }}
+                />
+
                 <Button
                     title={'Выход'}
                     onPress={() => {
                         this.props.navigation.navigate("Auth"); // Navigate to Auth Screen
-                        this.props.socket.disconnect();
                     }}
                 />
             </View>
@@ -89,12 +106,16 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
     socket: state.settings.socket,
     server: state.settings.server,
+    serverApi: state.settings.serverApi,
     consultantName: state.settings.consultantName,
 });
 
 const mapDispatchToProps = dispatch => ({
     setServer: server => {
         dispatch({ type: 'SET_SERVER', payload: server });
+    },
+    setServerApi: serverApi => {
+        dispatch({ type: 'SET_SERVER_API', payload: serverApi });
     },
     setSocket: socket => {
         dispatch({ type: 'SET_SOCKET', payload: socket });

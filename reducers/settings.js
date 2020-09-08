@@ -2,12 +2,15 @@ export const SET_SOCKET = 'SET_SOCKET';
 export const SET_DATABASE = 'SET_DATABASE';
 export const SET_NAME = 'SET_NAME';
 export const SET_SERVER = 'SET_SERVER';
+export const SET_SERVER_API = 'SET_SERVER_API';
 export const SET_NAVIGATION = 'SET_NAVIGATION';
+export const SET_CONSULTANT_ID = 'SET_CONSULTANT_ID';
 
 const initialState = {
     socket: null,
     server: '192.168.43.115:3000',
-    consultantName: ''
+    consultantName: '',
+    serverApi: 'http://localhost:50717/api/'
 };
 //
 export default function settings (state = initialState, action ) {
@@ -18,10 +21,14 @@ export default function settings (state = initialState, action ) {
             return { ...state, database: action.payload };
         case SET_SERVER:
             return { ...state, server: action.payload };
+        case SET_SERVER_API:
+            return { ...state, serverApi: action.payload };
         case SET_NAME:
             return { ...state, consultantName: action.payload };
         case SET_NAVIGATION:
             return { ...state, navigation: action.payload };
+        case SET_CONSULTANT_ID:
+            return { ...state, consultantId: action.payload };
         default:
             return state;
     }

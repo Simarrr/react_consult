@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Swipeable from 'react-native-swipeable';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import {connect} from "react-redux";
+import createApi from "./api";
 
 const leftContent = <Text />;
 const rightContent = <Text />;
@@ -12,10 +13,15 @@ const ListItem = ({ query, name, navigation }) => {
 
     let activeQueryCounter = 0;
 
+    const requestStatus ={
+        OPEN: 0,
+        IN_PROCESS: 1,
+        CLOSE: 2
+    }
 
 
-    function queryColor(inProcessing) {
-        if (inProcessing) {
+    function queryColor(status) {
+        if (status === requestStatus.IN_PROCESS) {
             return {
                 backgroundColor: "blue" //if request is in work
             };
@@ -31,24 +37,24 @@ const ListItem = ({ query, name, navigation }) => {
             <Swipeable
             leftContent={leftContent}
             onLeftActionActivate={() => {
-                if (name !== '') {
-                    query.userid = name;
-                    console.log(query);
-                    //socket.emit('takeInWork', query); //Calls action to change state in array object
+
+                    if(this.props.consultantId && query.id) {
+                        const api = createApi(this.props.serverApi);
+                        api.queries.takeInWork(this.props.consultantId, query.id);
+                    }
                     activeQueryCounter++;
-                } else {
-                    alert ('Введите свое имя!')
-                }
+
 
             }}
             rightContent={rightContent}
             onRightActionActivate={() => {
                 if (query.status) {
-                    if (query.consultantName === name) {
-                        //socket.emit('completed', query); // Removes object query from array
-                    } else {
-                        alert('Заявку выполняет другой сотрудник');
-                    }
+
+                        if(this.props.consultantId && query.id){
+                            const api = createApi(this.props.serverApi);
+                            api.queries.completeWork(this.props.consultantId, query.id);
+                        }
+
                 } else{
                     alert('Сначала выполни заявку!');
                 }
@@ -57,14 +63,13 @@ const ListItem = ({ query, name, navigation }) => {
         >
 
             <TouchableOpacity onPress={() =>{ navigation('Thing', {
-                consultantName: query.consultantName,
-                roomNumber: query.roomNumber,
+                consultantName: name,
                 name: query.products[0].name,
                 size: query.products[0].sizes[0].name,
-                ware: query.products[0].vendorcode,
+                ware: query.products[0].vendorcode === undefined ? query.products[0].vendorCode : query.products[0].vendorcode,
                 image: query.products[0].images[0].url,
                 things: query.products,
-                text: query.title,
+                type: query.type,
                 barcode: query.products[0].barcode,
                 price: query.products[0].price
             });
@@ -72,7 +77,7 @@ const ListItem = ({ query, name, navigation }) => {
             <View style={[styles.listItem, queryColor(query.status)]}>
                 <View style={styles.roomNumberBlock}>
                     <Text style={{ color: "white", fontSize: 50 }}>
-                        {query.roomNumber}
+                        1
                     </Text>
                 </View>
                 <View style={styles.infoBlock}>
@@ -85,7 +90,7 @@ const ListItem = ({ query, name, navigation }) => {
                         </>
                         : null
                     }
-                    <Text style={{ color: "white" }}>{query.consultantName}</Text>
+                    <Text style={{ color: "white" }}>{name}</Text>
                 </View>
             </View>
             </TouchableOpacity>
@@ -117,6 +122,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
     server: state.settings.server,
     consultantName: state.settings.consultantName,
+    consultantId: state.settings.consultantId
 });
 
 

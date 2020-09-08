@@ -10,13 +10,19 @@ class ThingScreen extends React.Component {
         alert("Error");
     }
 
+    requestType = {
+        BRING_THING: 0,
+        TAKE_TO_CHECKOUT: 1,
+        COME_UP: 2
+    }
+
     render() {
-        if (this.props.navigation.state.params.text === "Запрос товара") { // Different JSX for different request types
+        if (this.props.navigation.state.params.type === this.requestType.BRING_THING) { // Different JSX for different request types
             return (
                 <View>
                     <ScrollView>
                         <View style={styles.roomNumberBlock}>
-                            <Text> {this.props.navigation.state.params.roomNumber}</Text>
+                            <Text> 1 </Text>
                         </View>
                         <View>
                             <Image source={{uri: `${this.props.navigation.state.params.image}`}}
@@ -55,7 +61,7 @@ class ThingScreen extends React.Component {
                     </ScrollView>
                 </View>
             )
-        } else if (this.props.navigation.state.params.text === "Подойти в комнату") {
+        } else if (this.props.navigation.state.params.type === this.requestType.COME_UP) {
             return (
                 <View>
                     <View style={styles.roomNumberBlock}>
@@ -66,7 +72,7 @@ class ThingScreen extends React.Component {
                     </View>
                 </View>
             )
-        } else if (this.props.navigation.state.params.text === "Отнести на кассу") {
+        } else if (this.props.navigation.state.params.type === this.requestType.TAKE_TO_CHECKOUT) {
 
             const {navigate} = this.props.navigation;
             let things =  this.props.navigation.state.params.things;

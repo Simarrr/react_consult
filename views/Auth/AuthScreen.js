@@ -6,7 +6,7 @@ import Svg, {Image, Circle, ClipPath} from 'react-native-svg';
 import Animated, {Easing} from 'react-native-reanimated';
 import {TapGestureHandler, State} from "react-native-gesture-handler";
 import { connect } from 'react-redux';
-import api from "../../components/api";
+import createApi from "../../components/api";
 
 
 
@@ -257,12 +257,18 @@ class AuthScreen extends React.Component{
                                     // Admin Panel login and password
                                     if(this.state.name && this.state.name !== "" ) {
                                         //TODO users authorization
+                                        const api = createApi(this.props.serverApi)
                                         api.login.userLogin(this.state.name)
                                             .then(consultantId =>{
                                                 if(consultantId) {
-                                                    this.props.navigation.navigate('Main');
+                                                    this.props.setConsultantId(consultantId);
+                                                    this.props.setName(this.state.name, this.props.navigation.navigate);
                                                 }
+                                            })
+                                            .catch(err => {
+
                                             });
+                                        this.props.navigation.navigate('Main')
                                          // Navigates to Admin Panel
                                     }
 
@@ -336,6 +342,11 @@ const styles = StyleSheet.create({
     },
 });
 
+const mapStateToProps = state => ({
+    serverApi: state.settings.serverApi,
+});
+
+
 const mapDispatchToProps = dispatch => ({
     setName: (name, navigate) => {
         if (name) {
@@ -346,10 +357,14 @@ const mapDispatchToProps = dispatch => ({
     setSocket: socket => {
         dispatch({ type: 'SET_SOCKET', payload: socket });
     },
+
+    setConsultantId: (id) =>{
+        dispatch({ type: 'SET_CONSULTANT_ID', payload: id});
+    },
     setDatabase: database => {
         dispatch({ type: 'SET_DATABASE', payload: database });
     },
 });
 
 
-export default connect(mapDispatchToProps)(AuthScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthScreen);

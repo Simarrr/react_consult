@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import ListItem from "../components/ListItem";
-import {HubConnection, HubConnectionBuilder, signalR} from '@microsoft/signalr';
+import createApi from "../components/api";
 
 
 
@@ -34,9 +34,9 @@ class MainScreen extends React.Component{
             "userid": "8D1D8C64-F88D-4B8F-9FD8-779248544F00",
             "consultantName": "",
             "roomNumber": "2",
-            "status": true,
+            "status": 1,
             "title": "Запрос товара",
-            "type": 1,
+            "type": 1,//bring thing - 0;
             "products": [{
                 "name": "Кроссовки ZENDEN active",
                 "price": 2499,
@@ -55,8 +55,7 @@ class MainScreen extends React.Component{
                 "category": {
                     "name": "Кроссовки"
                 },
-                "images": [{"url": "njjj"},
-                    {"url": "nnjj"}]
+                "images": [{"url": "kkkk"}]
             }]
         }],
     };
@@ -96,7 +95,7 @@ class MainScreen extends React.Component{
     }
 
     componentDidMount() {
-        alert("hellhho");
+
         console.log(this.state.queriesArray);
 
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
@@ -106,20 +105,14 @@ class MainScreen extends React.Component{
     this.getQueries();
     this.interval = setInterval(() => {
         this.getQueries();
-    }, 10000);
+    }, 3000);
 
     }
 
     getQueries(){
-
-        fetch("https://api.chucknorris.io/jokes/random")
-            .then(res => {
-                return res.json();
-            })
-            .then(res => {
-                this.setState( { queriesArray: res.value});
-            });
-
+        const api = createApi(this.props.serverApi);
+        api.queries.getAll()
+            .then(res => {this.setState({queriesArray: res})});
     }
 
     componentWillUnmount () {
@@ -195,7 +188,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
      socket: state.settings.socket,
     server: state.settings.server,
+    serverApi: state.settings.serverApi,
     consultantName: state.settings.consultantName,
+    consultantId: state.settings.consultantId,
 });
 
 const mapDispatchToProps = dispatch => ({
